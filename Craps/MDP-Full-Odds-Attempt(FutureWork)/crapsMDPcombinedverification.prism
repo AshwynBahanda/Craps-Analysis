@@ -1,0 +1,130 @@
+mdp
+
+const int min_buyin=5;
+const int buyin; //SUBJECT TO CHANGE
+const balance;  //SUBJECT TO CHANGE
+const maximum_money= balance + (steps*buyin) + (2*(odds*steps));
+const odds;
+const int steps;
+
+module CRAPS
+
+    x: [0..2] init 0;
+    total: [0..maximum_money] init balance;
+    d: [0..12];
+    k: [0..steps+1] init 0;
+    //PASSLINE RULES
+
+    [passbet] x=0 & (total>=min_buyin) & (total>=odds) -> 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //7
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //11
+                                    + 0.02778:(x'=0) & (total'=max(0,loss)) & (k' = update) //2
+                                    + 0.05556:(x'=0) & (total'=max(0,loss)) & (k' = update) //3
+                                    + 0.02778:(x'=0) & (total'=max(0,loss)) & (k' = update) //12
+                                    + 0.08333:(x'=1) & (d'=4)  
+                                    + 0.11111:(x'=1) & (d'=5)
+                                    + 0.13889:(x'=1) & (d'=6) 
+                                    + 0.13889:(x'=1) & (d'=8) 
+                                    + 0.11111:(x'=1) & (d'=9) 
+                                    + 0.08333:(x'=1) & (d'=10);
+
+    [passbet] x=0 & (total>=min_buyin) & (total <buyin) -> 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (k' = update) 
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,total+total)) & (k' = update)
+                                    + 0.02778:(x'=0) & (total'=max(0,total-total)) & (k' = update)
+                                    + 0.05556:(x'=0) & (total'=max(0,total-total)) & (k' = update)
+                                    + 0.02778:(x'=0) & (total'=max(0,total-total)) & (k' = update)
+                                    + 0.08333:(x'=1) & (d'=4)  
+                                    + 0.11111:(x'=1) & (d'=5)
+                                    + 0.13889:(x'=1) & (d'=6) 
+                                    + 0.13889:(x'=1) & (d'=8) 
+                                    + 0.11111:(x'=1) & (d'=9) 
+                                    + 0.08333:(x'=1) & (d'=10);
+
+    //DONTPASS RULES
+    [dontpassbet] x=0 & (total>=min_buyin) & (total<=odds) -> 0.16666:(x'=0) & (total'=max(0,loss)) & (k' = update) //7
+                                    + 0.05556:(x'=0) & (total'=max(0,loss)) & (k' = update) //11
+                                    + 0.02778:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //2
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //3
+                                    + 0.02778:(x'=0) & (k' = update) //12
+                                    + 0.08333:(x'=2) & (d'=4)  
+                                    + 0.11111:(x'=2) & (d'=5)
+                                    + 0.13889:(x'=2) & (d'=6) 
+                                    + 0.13889:(x'=2) & (d'=8) 
+                                    + 0.11111:(x'=2) & (d'=9) 
+                                    + 0.08333:(x'=2) & (d'=10);
+
+
+    [dontpassbet] x=0 & (total>=min_buyin) & (total<buyin)  -> 0.16666:(x'=0) & (total'=max(0,total-total)) & (k' = update) //7
+                                    + 0.05556:(x'=0) & (total'=max(0,total-total)) & (k' = update) //11
+                                    + 0.02778:(x'=0) & (total'=min(maximum_money,total+total)) & (k' = update) //2
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,total+total)) & (k' = update) //3
+                                    + 0.02778:(x'=0) & (k' = update) //12
+                                    + 0.08333:(x'=2) & (d'=4)  
+                                    + 0.11111:(x'=2) & (d'=5)
+                                    + 0.13889:(x'=2) & (d'=6) 
+                                    + 0.13889:(x'=2) & (d'=8) 
+                                    + 0.11111:(x'=2) & (d'=9) 
+                                    + 0.08333:(x'=2) & (d'=10);
+
+  
+    //PASSLINE RULES (COMEOUT ROLLS)
+    [come_out_roll_take4] x=1 & d=4 & (total>=buyin+odds) -> 0.08333:(x'=0)  & (total'=min(maximum_money,winoddstake410)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll_take5] x=1 & d=5 & (total>=buyin+odds) -> 0.11111:(x'=0)  & (total'=min(maximum_money,winoddstake59)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll_take6] x=1 & d=6 & (total>=buyin+odds)-> 0.13889:(x'=0)  & (total'=min(maximum_money,winoddstake68)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll_take8] x=1 & d=8 & (total>=buyin+odds)-> 0.13889:(x'=0)  & (total'=min(maximum_money,winoddstake68)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll_take9] x=1 & d=9 & (total>=buyin+odds)-> 0.11111:(x'=0)  & (total'=min(maximum_money,winoddstake59)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll_take10] x=1 & d=10 & (total>=buyin+odds)->0.08333:(x'=0)  & (total' = min(maximum_money,winoddstake410)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,lossodds)) & (d'=0)  & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.11111:(x'=1) + 0.05556:(x'=1)  + 0.02778:(x'=1);
+     
+    [come_out_roll] x=1 & d=4 & (total<buyin+odds) & (total>=buyin) -> 0.08333:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=5 & (total<buyin+odds) & (total>=buyin) -> 0.11111:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=6 & (total<buyin+odds) & (total>=buyin)-> 0.13889:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=8 & (total<buyin+odds) & (total>=buyin)-> 0.13889:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=9 & (total<buyin+odds) & (total>=buyin)-> 0.11111:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=10 & (total<buyin+odds) & (total>=buyin) ->0.08333:(x'=0)  & (total' = min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0)  & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.11111:(x'=1) + 0.05556:(x'=1)  + 0.02778:(x'=1);
+	
+
+    //If user has more money than minimum buy in, but less than the fixed buy in (ie forced to go all in), user should only win double the remainder of their balance
+    [come_out_roll] x=1 & d=4 & (total<buyin+odds) & (total<buyin) -> 0.08333:(x'=0)  & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=5 & (total<buyin+odds) & (total<buyin)-> 0.11111:(x'=0)  & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=6 & (total<buyin+odds) & (total<buyin)-> 0.13889:(x'=0)  & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=8 & (total<buyin+odds) & (total<buyin)-> 0.13889:(x'=0)  & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=9 & (total<buyin+odds) & (total<buyin)-> 0.11111:(x'=0)  & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=10 & (total<buyin+odds) & (total<buyin) ->0.08333:(x'=0)  & (total' = min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,total-total)) & (d'=0)  & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.11111:(x'=1) + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    
+    //DONTPASSLINE RULES (COMEOUT ROLLS)
+    [come_out_roll_lay4] x=2 & d=4 & (total>=buyin+odds) -> 0.08333:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,winoddslay410)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll_lay5] x=2 & d=5 & (total>=buyin+odds) -> 0.11111:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,winoddslay59)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll_lay6] x=2 & d=6 & (total>=buyin+odds) -> 0.13889:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,winoddslay68)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll_lay8] x=2 & d=8 & (total>=buyin+odds) -> 0.13889:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,winoddslay410)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll_lay9] x=2 & d=9 & (total>=buyin+odds) -> 0.11111:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,winoddslay59)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll_lay10] x=2 & d=10 & (total>=buyin+odds) ->0.08333:(x'=0)  & (total'=max(0,lossodds)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'= min(maximum_money,winoddslay410)) & (d'=0)  & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.11111:(x'=2) + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    
+    [come_out_roll] x=2 & d=4 & (total<buyin+odds) & (total>=buyin) -> 0.08333:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=5 & (total<buyin+odds) & (total>=buyin) -> 0.11111:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=6 & (total<buyin+odds) & (total>=buyin) -> 0.13889:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=8 & (total<buyin+odds) & (total>=buyin) -> 0.13889:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=9 & (total<buyin+odds) & (total>=buyin) -> 0.11111:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=10 & (total<buyin+odds) & (total>=buyin) ->0.08333:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'= min(maximum_money,win)) & (d'=0)  & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.11111:(x'=2) + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    //If user has more money than minimum buy in, but less than the fixed buy in (ie forced to go all in), user should only win double the remainder of their balance
+    [come_out_roll] x=2 & d=4 & (total<buyin+odds) & (total<buyin) -> 0.08333:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=5 & (total<buyin+odds) & (total<buyin) -> 0.11111:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=6 & (total<buyin+odds) & (total<buyin)-> 0.13889:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=8 & (total<buyin+odds) & (total<buyin)-> 0.13889:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=9 & (total<buyin+odds) & (total<buyin)-> 0.11111:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,total+total)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=10 & (total<buyin+odds) & (total<buyin) ->0.08333:(x'=0)  & (total'=max(0,total-total)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'= min(maximum_money,total+total)) & (d'=0)  & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.11111:(x'=2) + 0.05556:(x'=2)  + 0.02778:(x'=2);
+endmodule
+
+formula winoddstake59=(total+buyin+(round(3/2*odds)));
+formula winoddstake68=(total+buyin+(round(6/5*odds)));
+formula winoddstake410=(total+buyin+(round(2*odds)));
+formula winoddslay410=(total+buyin+(round(1/2*odds)));
+formula winoddslay68=(total+buyin+(round(5/6*odds)));
+formula winoddslay59=(total+buyin+(round(2/3*odds)));
+formula win = (total+buyin);
+formula lossodds=(total-buyin-odds);
+formula loss=(total-buyin);
+formula update = min(k+1,steps+1);
+
+rewards "state_rewards"
+	 x=0 & k=steps : total;
+endrewards
+

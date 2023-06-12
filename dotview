@@ -1,0 +1,9 @@
+#!/bin/csh
+
+if (-f $1.dot) then
+  dot -Tpdf $1.dot -o $1.dot.pdf
+  
+  open $1.dot.pdf
+else
+  echo 'dotview: cannot find file "'$1.dot'"'
+endif

@@ -1,0 +1,6 @@
+const int t = 100;
+
+Pmax=? [ F total>=t&k=steps ]
+
+Rmax=? [ F k=steps+1|total<min_buyin ]
+

@@ -1,0 +1,6 @@
+Pmax=? [ F total>balance&k=1 ]
+
+Pmax=? [ F total<balance&k=1 ]
+
+Pmax=?[F total=balance & k=1]
+

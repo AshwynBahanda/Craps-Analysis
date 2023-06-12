@@ -1,0 +1,93 @@
+mdp
+
+const int min_buyin=5;
+const int buyin; //SUBJECT TO CHANGE
+const balance;  //SUBJECT TO CHANGE
+const maximum_money=balance + steps*buyin;
+const int steps;
+
+module CRAPS
+
+    x: [0..2] init 0;
+    total: [0..maximum_money] init balance;
+    d: [0..12];
+    k: [0..steps+1] init 0;
+    draw: bool init false;
+   
+    
+    //EVEN STEPS
+	[passbet] x=0 & (total>=min_buyin) & (decidertoplay>=100) & ((stepstest=0) | (draw))-> 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) 
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,win)) & (k' = update)
+                                    + 0.02778:(x'=0) & (total'=max(0,loss)) & (k' = update)
+                                    + 0.05556:(x'=0) & (total'=max(0,loss)) & (k' = update)
+                                    + 0.02778:(x'=0) & (total'=max(0,loss)) & (k' = update) 
+                                    + 0.08333:(x'=1) & (d'=4)  
+                                    + 0.11111:(x'=1) & (d'=5)
+                                    + 0.13889:(x'=1) & (d'=6) 
+                                    + 0.13889:(x'=1) & (d'=8) 
+                                    + 0.11111:(x'=1) & (d'=9) 
+                                    + 0.08333:(x'=1) & (d'=10);
+
+
+        
+	//Whenever it is less than £100 stop as no chance of breaking-even (does not matter what bet is played in these states as the session stops).
+        [passbet] x=0 & (total>=min_buyin) & (decidertoplay<100)  -> 1.0:(x'=0) & (k'=steps+1) & (total'=total);
+
+    //DONTPASS RULES
+    //greater than or equal to
+    
+        //ODD STEPS
+        [dontpassbet] x=0 & (total>=min_buyin) & (decidertoplay>=100) & (stepstest=1 & !draw)   -> 0.16666:(x'=0) & (total'=max(0,loss)) & (k' = update) //7
+                                    + 0.05556:(x'=0) & (total'=max(0,loss)) & (k' = update) //11
+                                    + 0.02778:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //2
+                                    + 0.05556:(x'=0) & (total'=min(maximum_money,win)) & (k' = update) //3
+                                    + 0.02778:(x'=0) & (k' = update) & (draw'=true) //12
+                                    + 0.08333:(x'=2) & (d'=4)  
+                                    + 0.11111:(x'=2) & (d'=5)
+                                    + 0.13889:(x'=2) & (d'=6) 
+                                    + 0.13889:(x'=2) & (d'=8) 
+                                    + 0.11111:(x'=2) & (d'=9) 
+                                    + 0.08333:(x'=2) & (d'=10);
+
+    
+   //Model implementation above also caters to states when it is not possible to not break even by the end of the session.
+	
+
+        
+
+         
+    
+
+  
+    //PASSLINE RULES (COMEOUT ROLLS)
+
+    //If user has more money than minimum buy in, but less than the fixed buy in (ie forced to go all in), user should only win double the remainder of their balance
+    [come_out_roll] x=1 & d=4  -> 0.08333:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=5  -> 0.11111:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.13889:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=6 -> 0.13889:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=8 -> 0.13889:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.11111:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=9 -> 0.11111:(x'=0)  & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.08333:(x'=1)  + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    [come_out_roll] x=1 & d=10  ->0.08333:(x'=0)  & (total' = min(maximum_money,win)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=max(0,loss)) & (d'=0)  & (k' = update) + 0.02778:(x'=1) + 0.05556:(x'=1) + 0.08333:(x'=1) + 0.11111:(x'=1) + 0.13889:(x'=1)  + 0.13889:(x'=1)  + 0.11111:(x'=1) + 0.05556:(x'=1)  + 0.02778:(x'=1);
+    
+    //DONTPASSLINE RULES (COMEOUT ROLLS)
+    [come_out_roll] x=2 & d=4  -> 0.08333:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=5  -> 0.11111:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.13889:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=6  -> 0.13889:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=8  -> 0.13889:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.11111:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=9  -> 0.11111:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'=min(maximum_money,win)) & (d'=0) & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.08333:(x'=2)  + 0.05556:(x'=2)  + 0.02778:(x'=2);
+    [come_out_roll] x=2 & d=10  ->0.08333:(x'=0)  & (total'=max(0,loss)) & (d'=0) & (k' = update) + 0.16666:(x'=0) & (total'= min(maximum_money,win)) & (d'=0)  & (k' = update) + 0.02778:(x'=2) + 0.05556:(x'=2) + 0.08333:(x'=2) + 0.11111:(x'=2) + 0.13889:(x'=2)  + 0.13889:(x'=2)  + 0.11111:(x'=2) + 0.05556:(x'=2)  + 0.02778:(x'=2);
+
+
+endmodule
+
+formula win=(total+buyin);
+formula loss=(total-buyin);
+formula update = min(k+1,steps+1);
+formula decidertoplay = (total + ((steps-k)*10)); //less than 100 stop
+formula dontpassdecider = (total - ((steps-k)*10)); //play dont pass, if less than £100, play pass bet.
+formula stepstest = mod(steps,2);
+formula totaltest = mod(round(total/buyin),2);
+
+rewards "state_rewards"
+	x=0 & k=steps : total;
+endrewards

@@ -4,7 +4,7 @@ Please refer to the PRISM manual on how to install PRISM on your machine: http:/
 
 Once PRISM is installed, follow this link to open up the PRISM GUI: https://www.prismmodelchecker.org/manual/RunningPRISM/StartingPRISM
 
-Once the GUI has opened, feel free to analyse the files for any more interesting trends. Also feel free to add more analysis files for different bets in the craps game!
+Once the GUI has opened, feel free to analyse the files for any more interesting trends. Also feel free to add more analysis files for different bets in the craps game! See the File structure section (down below) to identify where the prism and props files are located.
 
 If you want to visualise the optimal strategies, please go to the command line and use accordingly (depending on the file and props you want to analyse):
 

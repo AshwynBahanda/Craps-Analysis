@@ -6,7 +6,7 @@ Once PRISM is installed, follow this link to open up the PRISM GUI: https://www.
 
 Once the GUI has opened, feel free to analyse the files for any more interesting trends. Also feel free to add more analysis files for different bets in the craps game! See the File structure section (down below) to identify where the prism and props files are located.
 
-If you want to visualise the optimal strategies, please go to the command line and use accordingly (depending on the file and props you want to analyse):
+If you want to visualise the optimal strategies, please go to the command line and use the command below accordingly (depending on the file and props you want to analyse):
 
 prism <"prism file path"> <"props file path"> -const <"const declarations"> -prop <"number of the prop you want to use to analyse"> -s -exportadvmdp tmp.tra -exportstates tmp.sta -exportlabels tmp.lab
 

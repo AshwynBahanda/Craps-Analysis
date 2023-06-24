@@ -1,3 +1,13 @@
+
+# DESCRIPTION
+This project delves into the stochastic behavior of primary bets in craps using cutting-edge methods like reinforcement learning, value iteration, and probabilistic model checking. The dissertation, scoring 84% (A3), provides a solid introduction to these techniques and serves as a valuable resource for future analysis.
+
+Implemented through meticulously crafted PRISM source code, the project explores the complexities of craps betting, revealing insights into the unpredictable nature of key bets. The findings offer strategic decision-making support and a deeper understanding of the game's dynamics.
+
+This project has equipped me with indispensable tools to facilitate the development of valuable analysis techniques in future endeavors. By exploring the stochastic behavior of primary bets in craps through advanced methodologies such as reinforcement learning, value iteration, and probabilistic model checking, I have gained a solid foundation for conducting rigorous analyses.
+
+
+
 # HOW TO RUN
 
 Please refer to the PRISM manual on how to install PRISM on your machine: http://www.prismmodelchecker.org.
